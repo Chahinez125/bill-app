@@ -19,7 +19,7 @@ handleSubmitAdmin = e => {
 }
 ```
 
-### Debugs #2 - Bills/Sort Bills
+### Debugs2
 **Comportements attendus:** Faire passer le test au vert en réparant la fonctionnalité.
 
 **Solution:** Trier le tableau avec un sort dans la vue et ajouter une propriété accept à l'input file pour dire quels types de fichier il doit accepter.
@@ -28,10 +28,12 @@ views/BillsUI.js
 
 ```javascript
 const rows = (data) => {
-    return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
-    return (data && data.length) ? data
-        .sort((currentBill, nextBill) => new Date(nextBill.date) - new Date(currentBill.date))
-        .map(bill => row(bill)).join("") : ""
+    if (data && data.length) {
+        data.sort((currentBill, nextBill) => new Date(nextBill.date) - new Date(currentBill.date));
+        return data.map(bill => row(bill)).join("");
+    } else {
+        return "";
+    }
 }
 ```
 
@@ -44,31 +46,45 @@ const rows = (data) => {
 containers/NewBill.js
 
 ```javascript
-const fileExtension = file.name.split('.')[1]
-
-const validExtensions = [
-    {
-        name: 'png',
-    },
-    {
-        name: 'jpg',
-    },
-    {
-        name: 'jpeg',
-    },
-]
-
-let isValidExtension = false
-
-validExtensions.forEach((validExtension) => {
-    if (fileExtension === validExtension.name) {
-        isValidExtension = true
+handleChangeFile = e => {
+    e.preventDefault()
+    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+    handleChangeFile = e => {
+      e.preventDefault();
+      const fileInput = this.document.querySelector(`input[data-testid="file"]`);
+      if (!fileInput) {
+        throw new Error("File input not found");
+      }
+      const file = fileInput.files[0];
+      if (!file) {
+        throw new Error("No file selected");
+      }
+      const fileExtension = file.name.split('.')[1];
+    
+      const validExtensions = [
+        {
+          name: 'png',
+        },
+        {
+          name: 'jpg',
+        },
+        {
+          name: 'jpeg',
+        },
+      ];
+    
+      let isValidExtension = false;
+    
+      validExtensions.forEach((validExtension) => {
+        if (fileExtension === validExtension.name) {
+          isValidExtension = true;
+        }
+      });
+    
+      if (!isValidExtension) {
+        e.target.value = '';
+      }
     }
-})
-
-if (!isValidExtension) {
-    e.target.value = ''
-}
 ```
 
 ### Debugs #4 - Dashboard
@@ -79,8 +95,7 @@ if (!isValidExtension) {
 containers/Dashboard.js
 
 ```javascript
-bills.forEach(bill => {
-    $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    $(`#status-bills-container${this.index} #open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills));
-})
+for (let i = 0; i < bills.length; i++) {
+      const bill = bills[i];
+      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills));
 ```
