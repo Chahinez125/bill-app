@@ -1,7 +1,7 @@
 # bill-app
-## Debugs
-### Debugs #1 - Login
-**Comportements attendus:** Si un administrateur remplit correctement les champs du Login, il devrait naviguer sur la page Dashboard
+
+### Debugs - Login
+
 
 **Solution:** Le selector prenait l'input "testid" de l'employé et non de l'admin
 
@@ -84,18 +84,15 @@ handleChangeFile = e => {
       if (!isValidExtension) {
         e.target.value = '';
       }
-    }
+    }}
 ```
 
-### Debugs #4 - Dashboard
-**Comportements attendus:** Pouvoir déplier plusieurs listes et consulter les tickets de chacune des deux listes.
-
-**Solution:** N'appliquer l'eventListener que sur les bills dépliés.
+### Debugs #4 - Dashboard   /  N'appliquer l'eventListener que sur les bills dépliés.
 
 containers/Dashboard.js
 
 ```javascript
 for (let i = 0; i < bills.length; i++) {
       const bill = bills[i];
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills));
+      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills));}
 ```
